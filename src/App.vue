@@ -1,31 +1,26 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+   <router-view/>
   </div>
 </template>
 
+<script>
+  export default {
+    components:{
+    }
+  }
+</script>
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-}
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
 </style>
+<!--<el-form :model="userInfo" status-icon  ref="userInfo" label-width="100px" class="demo-ruleForm">-->
+    <!--<el-form-item label="账号" prop="username">-->
+        <!--<el-input type="text" v-model="userInfo.username" autocomplete="off"></el-input>-->
+    <!--</el-form-item>-->
+    <!--<el-form-item label="密码" prop="password">-->
+        <!--<el-input type="password" v-model="userInfo.password" autocomplete="off"></el-input>-->
+    <!--</el-form-item>-->
+    <!--<el-form-item>-->
+        <!--<el-button type="primary"  @click="submitForm() ">提交</el-button>-->
+    <!--</el-form-item>-->
+<!--</el-form>-->
