@@ -66,6 +66,24 @@
                 </div>
             </el-dialog>
 
+            <el-dialog
+                    title="提交实验"
+                    :visible.sync="uploadVideoVisible"
+                    width="30%">
+                <el-upload
+                        class="upload-demo"
+                        ref="upload"
+                        :data="testId"
+                        name="testVideo"
+                        action="/api/test/uploadVideo"
+                        :on-success="uploadSuccess"
+                        :auto-upload="false">
+                    <el-button slot="trigger" size="small" type="primary">选取视频文件</el-button>
+                    <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUploadVideo">上传至服务器</el-button>
+                </el-upload>
+            </el-dialog>
+
+
             <el-table
                     v-loading="loading"
                     border
@@ -116,9 +134,13 @@
                 <el-table-column label="操作"  align="center">
                     <template slot-scope="scope">
                         <el-button
-                                size="mini"
+                                icon="el-icon-edit"
                                 type="success"
-                                @click="handleEdit(scope.row)">编辑</el-button>
+                                circle=""
+                                @click="handleEdit(scope.row)"></el-button>
+
+                        <el-button v-if="scope.row.videoUrl == null?false:true" @click="viewVideoBtn(scope.row)" type="primary" icon="el-icon-view" circle></el-button>
+                        <el-button v-else type="warning" icon="el-icon-upload" @click="uploadVideoBtn(scope.row)" circle></el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -131,6 +153,19 @@
                 content="点击添加一个实验课题">
             <el-button  slot="reference" type="primary" @click="handleAdd" icon="el-icon-plus"  style="position: absolute; right: 50px; bottom: 50px;" circle ></el-button>
         </el-popover>
+
+
+        <el-dialog
+                title="提示"
+                @close="closeVideo"
+                :visible.sync="videoViewDialog"
+                width="60%"
+                :before-close="handleClose">
+        <video :src="videoUrl"  controls="controls" style="width: 100%; height: 100%;">
+
+        </video>
+        </el-dialog>
+
     </div>
 
 </template>
@@ -140,6 +175,12 @@
         name: "CourseAdmin",
         data(){
             return{
+                testId:{
+                    testId:null,
+                },
+                videoUrl:null,
+                videoViewDialog:false,
+                uploadVideoVisible:false,
                 addCourseVisible:false,
                 dialogTitle:'',
                 loading:false,
@@ -167,6 +208,35 @@
         },
         methods:{
 
+            closeVideo(){
+                this.playPause();
+            },
+            playPause(){
+                let myVideo = document.getElementsByTagName('video')[0];
+                myVideo.pause();
+            },
+            viewVideoBtn(row){
+                this.videoUrl = "/api/image/" + row.videoUrl;
+                this.videoViewDialog = true;
+            },
+            uploadVideoBtn(row){
+                this.testId.testId = row.id;
+                console.log("testId: " + this.testId);
+                this.uploadVideoVisible = true;
+            },
+
+            submitUploadVideo(){
+                this.$refs.upload.submit();
+            },
+            uploadSuccess(response){
+                if(response.success)
+                {
+                    this.getAllCourseByTeacherId();
+                    this.uploadVideoVisible = false;
+                    this.$message.success("上传成功");
+                }
+
+            },
             addCourse(){
                 this.$axios({
                     method:"post",

@@ -29,7 +29,7 @@
                         prop="title"
                         label="实验名称"
                         align="center"
-                        width="450">
+                        width="400">
                 </el-table-column>
                 <el-table-column
                         prop="testDesc"
@@ -42,6 +42,11 @@
                         label="实验老师"
                         align="center"
                         width="150">
+                </el-table-column>
+                <el-table-column label="课题说明"   align="center"    >
+                    <template slot-scope="scope">
+                        <el-button  @click="viewVideoBtn(scope.row)" type="primary" icon="el-icon-view" circle></el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column label="操作"   align="center"    >
                     <template slot-scope="scope">
@@ -73,6 +78,18 @@
         </el-col>
 
         <el-dialog
+                title="提示"
+                @close="closeVideo"
+                :visible.sync="videoViewDialog"
+                width="60%"
+                :before-close="handleClose">
+            <video :src="videoUrl"  controls="controls" style="width: 100%; height: 100%;">
+
+            </video>
+        </el-dialog>
+
+
+        <el-dialog
                 title="提交实验"
                 :visible.sync="dialogVisible"
                 width="30%">
@@ -96,6 +113,7 @@
         name: "StudentTest",
         data(){
             return{
+                videoViewDialog:false,
                 tableData2: [],
                 currentPage:1,
                 currentSize:7,
@@ -108,6 +126,18 @@
             }
         },
         methods:{
+
+            closeVideo(){
+                this.playPause();
+            },
+            playPause(){
+                let myVideo = document.getElementsByTagName('video')[0];
+                myVideo.pause();
+            },
+            viewVideoBtn(row){
+                this.videoUrl = "/api/image/" + row.videoUrl;
+                this.videoViewDialog = true;
+            },
             uploadSuccess(response){
               if(response.success)
               {
@@ -143,13 +173,14 @@
                         temp.push(data[i]);
                     }
                 }
-                console.log(temp);
                 return temp;
             },
             getAllTestAvailable(){
                 this.$axios.get("/api/test/getAllTestAvailable").then(response=>{
                     setTimeout(()=>{
+                        console.log(response.data);
                         this.tableData2 = this.testUtil(response.data);
+
                         this.loading2 = false;
                     },500)
 
