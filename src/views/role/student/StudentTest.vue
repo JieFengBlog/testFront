@@ -45,7 +45,8 @@
                 </el-table-column>
                 <el-table-column label="课题说明"   align="center"    >
                     <template slot-scope="scope">
-                        <el-button  @click="viewVideoBtn(scope.row)" type="primary" icon="el-icon-view" circle></el-button>
+                        <el-button v-if="scope.row.videoUrl != null" @click="viewVideoBtn(scope.row)" type="primary" icon="el-icon-view" circle></el-button>
+                        <span v-else >无</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作"   align="center"    >
@@ -78,7 +79,7 @@
         </el-col>
 
         <el-dialog
-                title="提示"
+                title="课程说明"
                 @close="closeVideo"
                 :visible.sync="videoViewDialog"
                 width="60%"
@@ -192,6 +193,7 @@
             this.getAllTestAvailable();
         }
     }
+
 </script>
 
 <style scoped>

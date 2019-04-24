@@ -62,6 +62,11 @@
                 })
 
             }
+        },
+        created(){
+            if(sessionStorage.getItem("adminLoginStatus") != null){
+                this.$router.push("/adminHome");
+            }
         }
 
     }

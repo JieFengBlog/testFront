@@ -6,7 +6,10 @@
                     v-for="item in courseList"
                     :key="item.id"
                     :label="item.courseName"
+                    style="margin-top: 10px;"
                     :value="item.id">
+                <span style="float: left">{{ item.courseName }}</span>
+                <el-button size="mini" style="float: right;" @click="deleteCourse(item.id)" icon="el-icon-delete"  circle></el-button>
             </el-option>
         </el-select>
 
@@ -156,7 +159,7 @@
 
 
         <el-dialog
-                title="提示"
+                title="实验说明"
                 @close="closeVideo"
                 :visible.sync="videoViewDialog"
                 width="60%"
@@ -207,6 +210,31 @@
             }
         },
         methods:{
+
+            deleteCourse(courseId){
+                this.$confirm('此操作将永久删除该课程, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$axios({
+                        method:'get',
+                        url:'/api/course/deleteCourseByPrimaryId?courseId=' + courseId,
+                    }).then(response=>{
+                        if(response.data){
+                            this.currentCourse = "";
+                            this.getAllCourseByTeacherId();
+                            this.$message.success("删除成功");
+                        }
+
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
 
             closeVideo(){
                 this.playPause();
@@ -259,7 +287,7 @@
             handleEdit(data){
                 this.dialogTitle = '编辑实验信息',
 
-                    this.TestInfo.id = data.id;
+                this.TestInfo.id = data.id;
                 this.TestInfo.title = data.title;
                 this.TestInfo.testDesc = data.testDesc;
                 this.TestInfo.status = data.status;

@@ -128,7 +128,7 @@
         data(){
             return{
                 currentPage:1,
-                currentSize:10,
+                currentSize:5,
                 loading:false,
                 classList: [],
                 TestList: [],

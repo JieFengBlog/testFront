@@ -85,7 +85,7 @@
 
             <span slot="footer" class="dialog-footer">
                  <el-button @click="passwordDialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="passwordDialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="submitChangeAction">确 定</el-button>
             </span>
         </el-dialog>
     </el-container>
@@ -105,6 +105,27 @@
             }
         },
         methods:{
+            submitChangeAction(){
+                if(this.oldPassword == null && this.oldPassword == "" && this.newPassword == null && this.newPassword == ""){
+                    this.$message.error("输入项不能为空");
+                }
+
+                this.$axios({
+                    method:'post',
+                    url:'/api/user/changeAdminPassword',
+                    data:{
+                        oldPassword:this.oldPassword,
+                        newPassword:this.newPassword,
+                    }
+                }).then(response=>{
+                    if(response.data){
+                        this.$message.success("密码更改成功,下次登录记得使用新密码");
+                    }else{
+                        this.$message.error("旧密码输入错误")
+                    }
+                })
+              this.passwordDialogVisible = false;
+            },
             changePassword(){
                this.passwordDialogVisible = true;
             },
