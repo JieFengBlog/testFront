@@ -143,7 +143,7 @@
                                 @click="handleEdit(scope.row)"></el-button>
 
                         <el-button v-if="scope.row.videoUrl == null?false:true" @click="viewVideoBtn(scope.row)" type="primary" icon="el-icon-view" circle></el-button>
-                        <el-button v-else type="warning" icon="el-icon-upload" @click="uploadVideoBtn(scope.row)" circle></el-button>
+                        <el-button  type="warning" icon="el-icon-upload" @click="uploadVideoBtn(scope.row)" circle></el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -162,8 +162,7 @@
                 title="实验说明"
                 @close="closeVideo"
                 :visible.sync="videoViewDialog"
-                width="60%"
-                :before-close="handleClose">
+                width="60%">
         <video :src="videoUrl"  controls="controls" style="width: 100%; height: 100%;">
 
         </video>
@@ -257,9 +256,9 @@
                 this.$refs.upload.submit();
             },
             uploadSuccess(response){
-                if(response.success)
+                if(response)
                 {
-                    this.getAllCourseByTeacherId();
+                    this.getAllTestByTeacherId(this.currentCourse);
                     this.uploadVideoVisible = false;
                     this.$message.success("上传成功");
                 }

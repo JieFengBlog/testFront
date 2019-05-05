@@ -104,12 +104,12 @@
             sendMessage(){
                 this.$axios({
                     method:"post",
-                    url:"/comment/insertComment",
+                    url:"/api/comment/insertComment",
                     data:{
                         comment:this.comment
                     }
                 }).then(response=>{
-                    if(response.data.success){
+                    if(response.data){
                         this.$message.success("发送成功");
                     }
                 })
@@ -131,10 +131,14 @@
             },
 
             testFilterUtil(data){
+                console.log(data)
+                if(data == null){
+                    return null
+                }
                 let temp = new Array();
                 for(let i = 0; i < data.length; i++){
                     let object = {
-                        text:data[i].testId.title,
+                        text:data[i].title,
                         value:data[i].testId.id
                     }
                     temp.push(object);
@@ -185,6 +189,7 @@
             getAllDocument(){
                 this.loading = true;
                 this.$axios.get("/api/document/getAllDocument").then(response=>{
+                    console.log("getAllDocument")
                     console.log(response.data)
                     for(let i = 0 ; i < response.data.length; i++){
                         if(response.data[i].testId.teacherId.id == Number(sessionStorage.getItem("id"))){
@@ -193,19 +198,23 @@
                             console.log("baiqian")
                         }
                     }
+                    console.log("studentDocumentList: ")
+                    console.log(this.StudentDocumentList)
                     this.testUniqueList = this.testFilterUtil(this.getUniqueDocumentList(this.StudentDocumentList));
                     this.loading = false;
                 })
             },
 
             getUniqueDocumentList(data){
+                console.log("getUniqueDocumentList")
+                console.log(data)
                 let _container = new Array();
 
                 //防止第一次比较的时候_container空指针异常
-                if(data != null || data.length != 0){
+                if(data != null && data.length != 0){
                     _container.push(data[0])
                 }else{
-                    return;
+                    return null;
                 }
                 //去重
 
@@ -232,6 +241,7 @@
             },
         },
         created(){
+            console.log("id" + sessionStorage.getItem("id"));
             this.getAllDocument();
             this.getAllClass();
             this.getAllCourseByTeacherId();

@@ -83,7 +83,7 @@
                 @close="closeVideo"
                 :visible.sync="videoViewDialog"
                 width="60%"
-                :before-close="handleClose">
+                >
             <video :src="videoUrl"  controls="controls" style="width: 100%; height: 100%;">
 
             </video>
@@ -114,6 +114,7 @@
         name: "StudentTest",
         data(){
             return{
+                videoUrl:'',
                 videoViewDialog:false,
                 tableData2: [],
                 currentPage:1,

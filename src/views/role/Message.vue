@@ -34,6 +34,9 @@
                         align="center"
                         width="180"
                         label="发送时间">
+                    <template slot-scope="scope">
+                        {{new Date(scope.row.createTime).toLocaleString()}}
+                    </template>
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
